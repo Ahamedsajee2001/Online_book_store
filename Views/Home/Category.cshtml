@@ -1,0 +1,61 @@
+﻿
+@model List<OnlineBookStore.Models.Book>
+
+@{
+    ViewBag.Title = "Category";
+    Layout = "~/Views/Shared/_CatalogueLayout.cshtml";
+}
+
+<div class="container">
+    <h2>Books</h2>
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <form class="form-inline" method="get" action="@Url.Action("Category", "Books")">
+                <div class="input-group w-100">
+                    <input type="text" name="searchTerm" class="form-control" placeholder="Search for books by title or author..." aria-label="Search for books">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="submit">Search</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        @foreach (var book in Model)
+        {
+            <div class="col-md-3 mb-4">
+                <div class="card h-100">
+                    @{
+                        string base64Image = Convert.ToBase64String(book.Image);
+                        string imageUrl = string.Format("data:image/jpeg;base64,{0}", base64Image);
+                    }
+                    <img class="card-img-top" src="@imageUrl" alt="Book Image">
+                    <div class="card-body">
+                        <h5 class="card-title">@book.Title</h5>
+                        <p class="card-text">Author: @book.Author</p>
+                        <p class="card-text">Price: $@book.Price</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="btn-group">
+                                <form action="@Url.Action("AddToCart", "Cart")" method="post">
+                                    <input type="hidden" name="bookId" value="@book.Book_id" />
+                                    <div class="form-group">
+                                        <label for="quantity">Quantity:</label>
+                                        <input type="number" name="quantity" class="form-control" value="1" min="1" />
+                                    </div>
+                                    <button type="submit" class="btn btn-sm btn-outline-secondary">Add to Cart</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+
